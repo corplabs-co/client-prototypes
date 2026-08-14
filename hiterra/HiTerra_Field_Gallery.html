@@ -37,9 +37,10 @@ kbd{background:var(--mist);border:1px solid #C6D6FA;border-radius:4px;padding:1p
 <div class="body">
 <h1>Field Gallery</h1>
 <p><b>22 photos</b> from the Notion gallery, already curated.<br>
-Online mode streams them from Google Drive &mdash; needs wifi.<br>
+Curated = the 22 tagged shots. All = every photo in the Drive folder (132).<br>Online streams from Google Drive &mdash; needs wifi.<br>
 Offline mode is safer at a busy venue: download the photos first, then pick them here.</p>
-<button class="btn" id="go">Play online</button>
+<button class="btn" id="go">Play curated 22 online</button>
+<button class="btn alt" id="goall">Play all 132 online</button>
 <button class="btn alt" id="pick">Use downloaded photos</button>
 <input type="file" id="files" accept="image/*" multiple hidden>
 <div id="status"></div>
@@ -55,6 +56,140 @@ Offline mode is safer at a busy venue: download the photos first, then pick them
 </div>
 
 <script>
+var ALLPHOTOS=[
+  {id:"1mtPS2L46Ywr5BokcvAam5mDrqtiQk_D1", c:""},
+  {id:"1_7KNPvrkRNtWZLS_a79ld1spmmXn-MZ4", c:""},
+  {id:"1ggW7qR5Jfmz2T05y-KppVGr1qmBgg-dx", c:""},
+  {id:"1Snhwt0p2sQisbNKKSPUumU_VUm3kC4-Y", c:""},
+  {id:"1dRLRSSASwFqzSFdvqci7Ld8NeH3SWies", c:""},
+  {id:"1y0_m0zJEX6PNVXviIfnJ2-WVx9ldOYfn", c:""},
+  {id:"18XgkgEZV6M_At0-i5xlxmMMC1D0F9d_B", c:""},
+  {id:"1a5Q-yUfDhZbDpDjZs-AQu8KFH2BAGvWN", c:""},
+  {id:"16TgkNzd7Idu21tYvwC8OfY80kU36KvPq", c:""},
+  {id:"1Z2ba_Ii_fBsgw9FCK0Bq4UXuXynV_m6j", c:""},
+  {id:"1GYL2q4M_9PgG1KsPJ_qrkes0dg_oVXSm", c:""},
+  {id:"1DFB8SjcEaGc0i0yboCmrRNfp4tuMYbhY", c:""},
+  {id:"10wVkcZIaJWjbLVl4mzDqNHzMz_aWh-o0", c:""},
+  {id:"1xEmCnzsW4RGzcm0zJZHUB9WA-m5oAZKz", c:""},
+  {id:"1mOjkZ6uJpqahrXf4frksD_l6VdFn5F1F", c:""},
+  {id:"1jRNQ1Bfb5SXbLJHs_6-f2uxink-s8ldF", c:""},
+  {id:"1U8S-EvAJSDu4Qgl2RRQeMBmdXzHs2uLm", c:""},
+  {id:"1ZrV3Op3AqOfbssv6prAHLyRFXvpxIwBe", c:""},
+  {id:"13LarU8-rRnybH-3P4EmiPwTxLGeFmYFx", c:""},
+  {id:"1RkwoGgD9mDEtk9ymczqR5AtBImiMXfa4", c:""},
+  {id:"16PnRKce1Usjx6YiCRB4XWrhosmBiuGy4", c:""},
+  {id:"1-SAIGDaAoKohotBn5ig1c-Ns4KtXZyps", c:""},
+  {id:"1_-jT45DCtzXpVBtGk2s6734otxJW_VtG", c:""},
+  {id:"1PBvK1O5X2AIUl1l5sKE6rHiJy3rM5o0d", c:""},
+  {id:"14JMi13yTqIaHYVU4CiiWk7tEc6BiGcsg", c:""},
+  {id:"1dZ3KHljx4cVXUKGGnfLv3a8i5TVcaQzE", c:""},
+  {id:"1udO3fbCpU4a4rrDpfXzKzYbqLeA3Fo7Z", c:""},
+  {id:"171Pm9eJHDgRKazQZX-PSsNOEj9hjkDNi", c:""},
+  {id:"12_-X5JnOCHskNeUKITv6seSfOtF9N1mv", c:""},
+  {id:"1-C_sNPCUiwjgUMfuhwf93KFl9_WvydFb", c:""},
+  {id:"1Y1YhTdYyqz0KVf1oBZWrLZX12EwR0hUi", c:""},
+  {id:"1X5tnqoCSEJq-urAWFX7xVwYnQaCx2hoO", c:""},
+  {id:"1mpWCoE7jLFq80LDBMyEAmmJ6byB-aqWj", c:""},
+  {id:"1ZiXWb4Ajdg8DCVEe0mQv7WdBHx15FRp8", c:""},
+  {id:"1yHy4552gzkBHIFiiOIx-cYZ9RPhTx5Y_", c:""},
+  {id:"17VoaMmYDUuL5N64PoTvtiTqajALhpkT9", c:""},
+  {id:"1sn-gES0xpiGuOKux4n5yewAglgwL7_lr", c:""},
+  {id:"1funeVT1UiqVX7Rxby63miC8URKRaidYE", c:""},
+  {id:"1aObB3Cv1Ylpg9hgS9qgO27upi3fzvD_E", c:""},
+  {id:"1EY4_7J6Ql1m_FBn09-cfStSVHgkVBa-s", c:""},
+  {id:"1ZVu_nONQ3B0NF38eMui5NpRQNMpRN_5t", c:""},
+  {id:"14UXzo08XqUDZSHc6cN5tODEXX0J3xhaM", c:""},
+  {id:"1Kk4DCTBTfOcQaHCH6ttPq4AQdKR95Z4U", c:""},
+  {id:"1osRJesAxXVJMIu3XJCsObOM58GrBk03N", c:""},
+  {id:"1W4xfQPimoACJqhGJY9zizWRFIeUJKTgZ", c:""},
+  {id:"1933wdPrbCQjEoUXjhTOWORLScDsO4YuQ", c:""},
+  {id:"1w2UEyemmtTsC55K35Hgrr6Z_oxNU-aE3", c:""},
+  {id:"1V-qGSj9Zql-KdgzKMaL5qnDeOu3-ga-q", c:""},
+  {id:"1IZS36edeqQUK8zEba0brO8xhZmCaBhuz", c:""},
+  {id:"15wEdrTvcFVzZddA89nNhjlzPr4Z7vtJs", c:""},
+  {id:"1XobWigTZjHKEkiY5GSDqpmKpf1OCW8s_", c:""},
+  {id:"101pK-GFJMukZrKaYQ4wJu7QDNLBZ5jT5", c:""},
+  {id:"1mMdAMsDOVkq5oprNRupcrxnJeWSNx7la", c:""},
+  {id:"1fYatksAvN8PivKZiSZWsxgOcNhXUybDf", c:""},
+  {id:"1MgXsjac3qLRwKbCMvlGVtUqvKXWER_Zm", c:""},
+  {id:"1prBZFXrGVlNC8qY_7Y-_vWXJP0suQNCb", c:""},
+  {id:"1uw8y83QO6yekGaf1QGkW2Be7miN4Tfps", c:""},
+  {id:"1oSSQlL9jBSV-L7A-rTzp3XQ5BYlza6SU", c:""},
+  {id:"1NveTdyvVaAza28iRHdkwUnDWLXw59G8O", c:""},
+  {id:"1Z7ECWrscwEhTEQjLZVEetNH10P_BncpQ", c:""},
+  {id:"1t-RgUu4cde5P6MK0WyWGihg4MrovuUvw", c:""},
+  {id:"1hTdp_blptyw70ZsVUTf7jbQbFYw94a7L", c:""},
+  {id:"1wClmcQSovagLg2HWnVwepd6S60MaLThO", c:""},
+  {id:"1QLWqIKqkefLWgjBii8amz73TpJSkQSwS", c:""},
+  {id:"1W1HKFXkat9eHtcC5dAChkGmwFjZ7Qihs", c:""},
+  {id:"1KIAocuLpflgRjAIu13TMzpJ60mnR1BbC", c:""},
+  {id:"1rzfENhRf2smisqjK_yEi27zoPpMO4Dxo", c:""},
+  {id:"1FleoVOZZfp2bfWamW8IY4eyzHUS73-e-", c:""},
+  {id:"1qdSm69KtxvnMSmFAbaiyKQpd8cmiNZ0m", c:""},
+  {id:"1SLiTrdudkUWF3Echj2EjOR4a3hLvQihN", c:""},
+  {id:"1lakP4nMDfcKZTMwvaeN4XxXVAb-3bcM_", c:""},
+  {id:"12wW_ygdrkhDckXM70AdaRQ27f_zwRr7L", c:""},
+  {id:"1mFsYO904l3aRb_jx9MRPo3o10lroqzGK", c:""},
+  {id:"1n370xFnimr8gYuIakfpdv9cUXEaWkWlr", c:""},
+  {id:"1orJRNzq_hTthWnuWoRjdsKyAAghoc0Pn", c:""},
+  {id:"1mqlhJjKOJgj98kPvbop_mK8tOIndPE2w", c:""},
+  {id:"1MaVYZjigiITROw_qYb5iXZ9_l6rVNyu-", c:""},
+  {id:"1eZurAccj5inV1SnJU511eyCmkS_u17nx", c:""},
+  {id:"1sXyZ5tFttRUkMxPPYQqg0Jpl1C49z6Xw", c:""},
+  {id:"1NOzr42Jv8Mw947Uq_aL6GK6kkikU4zxf", c:""},
+  {id:"1ZMlPn2wQ4ZGYdV860gQep5E2hF5sy7AI", c:""},
+  {id:"1oQ-dATKSHVIb2Elt4dFV8mxqupg_ftLP", c:""},
+  {id:"1weFgmD59WuYeD3-6jAbZDwz4vp8vIPpB", c:""},
+  {id:"1JMhsIokLeBn_y7jchkX2GgEhw8Y8e7fK", c:""},
+  {id:"15PFovkkCIn9qxKWZZ7wIBVHLvRXHSrlW", c:""},
+  {id:"1GE8W76Qp6HbcxGyeIviKUZB4qIfTMxm9", c:""},
+  {id:"1D3lcQ47PwgxGeXcD5dP7CUU03QqHVeCg", c:""},
+  {id:"1ri2RZvbW49WmzckxQ6RTDSYfeSPHM6XW", c:""},
+  {id:"1SyPOg4tgZC3NR2_te_USEcAlfnmT-HXg", c:""},
+  {id:"1z7JuQCq3fb7u0sQoxL47xR-sE4u1Ey8_", c:""},
+  {id:"1pubpSQJqlV8cy9C1B_q9jPbMADLNg2_H", c:""},
+  {id:"1QG-67YukFW6GIYaoHUQhCituEL5l1UqB", c:""},
+  {id:"1FeN7JI1NGAxWVGVNFjbJHMuYUQGcW67A", c:""},
+  {id:"1XBEefSX1qlIspKwjaAOp1tozkt2RRxRY", c:""},
+  {id:"1XY-RP9RJlMZ2F_fqfnDrms8MsfNp9p88", c:""},
+  {id:"1EajeoSi3VKoeajtH5kMhARD8tgiq_LLz", c:""},
+  {id:"1R58eaUWOMrQOYTPvKldWV8L474mFn252", c:""},
+  {id:"1dWBrexi-85XuFuOQ3DMenPsnknTGCVyt", c:""},
+  {id:"1NAlcGCyhxV7_QxaSz4zJgQzL7TeJnPtQ", c:""},
+  {id:"1v07MCq7SLtt9MMr1IhBkeOy3Hgm_6h2O", c:""},
+  {id:"18IdCTzkzk7VnIr9BsSwth8zVHQx5CYRt", c:""},
+  {id:"1EBlQUKOuI9Cj1YPGS0JYA2Uq-Lv9hure", c:""},
+  {id:"1yiWksh_yS7AFltakgIyTvAzcJV19yQyM", c:""},
+  {id:"16NMoVILlUSv4TLUIxktgZcJraNwGnn7l", c:""},
+  {id:"13ORUJhkTrLSz27wt2IkXocERfEZuhEew", c:""},
+  {id:"1kI_31D9pKovEKJedDdX3YCV1XIaZ9URc", c:""},
+  {id:"1JRHmm8hI3sYnb3xWKh6hPuO4cJer5lX7", c:""},
+  {id:"1K64xzq06hxtInFFZlMTXGJrSSGB0vEg2", c:""},
+  {id:"1A35K49zSDE33UjCZ1ADroLjbI4CPcokO", c:""},
+  {id:"12SzgbcNH1XZEWzDUiIEw5JO2aGsmXMp4", c:""},
+  {id:"1Qgox7a29m-9ZuM91rbvNEf3Y2e6EpCH6", c:""},
+  {id:"1cSFHGJD6tt2hbDUW9gN9KSGjla0NPkXc", c:""},
+  {id:"17T006RtMuXv0yflQc0O22ETBly1g-8Ti", c:""},
+  {id:"1IZ1bzsoEnqj7Swi1ar6TOpJPKxm5Z_9z", c:""},
+  {id:"1IVdACqbFeAHN-MidAfQGCyqyThBqJL-4", c:""},
+  {id:"1TtqCNnWaOXMs5zOFpAkRO16fuX_JKv3I", c:""},
+  {id:"1dl0LVGei0WjPPp7Nzk8J9nkBqnQy-REP", c:""},
+  {id:"11aKpNmeh3QOXajWnkbL-HYDBOWM1cfQ2", c:""},
+  {id:"1D6w1kyP3WZAjwgv3Mmj8Oz0-lJUbG7_3", c:""},
+  {id:"1B4hL3tbWw_PAkkLctrcuUjdw6bceIClL", c:""},
+  {id:"16Nl_kgcymSX5c3T-DBxi0HLVSEbDaNr8", c:""},
+  {id:"1Chz0maesSM_XAT_Ru8VBvyIQutuhTjgA", c:""},
+  {id:"1lW81SwYku19NXwWilY8XmPjmqAbsxSge", c:""},
+  {id:"1NOJUrleiiFeOJ-lZNGaxq2tL2OPV6DYJ", c:""},
+  {id:"1BZyvGRcwK4ulS_-TgchDO1RkwnNObGVT", c:""},
+  {id:"1CFyn2o-SgS2GqCODNdFFIsPdyO64-5Pa", c:""},
+  {id:"1eXI0uROcZ-OCOBGhmzFpHqIChoYMtKep", c:""},
+  {id:"1ZRcxhxa8xcDqwEc8G1mTI5FtrgaTFP4o", c:""},
+  {id:"1crdZfEiLHv8MC5XI4r1S-Pk_UsLA41G5", c:""},
+  {id:"1Ga7Z02qhEinc5z58JmrjI2a2L6YqLP7i", c:""},
+  {id:"1RhAf7yrdMKRMHAToUwvr0uzT6TjLUgC1", c:""},
+  {id:"1Yzi1colY2z5OWyd3l19F-E5DzYpt1aVc", c:""}
+];
 var DATA=[
   {id:"1pubpSQJqlV8cy9C1B_q9jPbMADLNg2_H", c:"Sidec"},
   {id:"1lW81SwYku19NXwWilY8XmPjmqAbsxSge", c:"Sidec"},
@@ -93,6 +228,13 @@ document.getElementById('go').onclick=function(){
   setTimeout(function(){if(!done){done=true;status.textContent='Connection too slow \u2014 use downloaded photos instead.';}},10000);
 };
 
+document.getElementById('goall').onclick=function(){
+  status.textContent='Checking connection\u2026';
+  var t=new Image(),done=false;
+  t.onload=function(){if(!done){done=true;fails=0;list=ALLPHOTOS.slice();start();}};
+  loadInto(t,ALLPHOTOS[0].id,function(){if(!done){done=true;status.textContent='Could not load from Google Drive \u2014 use downloaded photos instead.';}});
+  setTimeout(function(){if(!done){done=true;status.textContent='Connection too slow \u2014 use downloaded photos instead.';}},10000);
+};
 document.getElementById('pick').onclick=function(){document.getElementById('files').click();};
 document.getElementById('files').onchange=function(e){
   var fs=Array.prototype.slice.call(e.target.files).filter(function(f){return f.type.indexOf('image/')===0;});
